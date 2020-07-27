@@ -28,7 +28,7 @@ class Action_Level(Piplines):
                 batch_size = 10
                 dataset_size = self.data_sizes[phase]
                 data_loader = self.data_loaders[phase]
-                print phase, dataset_size/K
+                print (phase, dataset_size/K)
                 #create data_file
                 
                 save_path = os.path.join(self.dataset_root, self.dataset_name, 'feas', 'activity')
@@ -37,7 +37,7 @@ class Action_Level(Piplines):
                 feas = np.zeros([dataset_size/K, feas_size*K+1])
                 filename = os.path.join(save_path, phase + '.npy')
                 np.save(filename, feas)
-                print 'The features files are created at ' + filename + '\n'
+                print ('The features files are created at ' + filename + '\n')
 
                 feas = np.load(filename, mmap_mode = 'r+')
                 i = 0
@@ -45,7 +45,7 @@ class Action_Level(Piplines):
                 for data in data_loader:
                     # get the inputs
                     inputs, labels = data
-                    print batch_size*i,'/',dataset_size/K
+                    print (batch_size*i,'/',dataset_size/K)
                     # wrap them in Variable
                     inputs = Variable(inputs.float().cuda()) if torch.cuda.is_available() else Variable(inputs.float())
                     # forward
@@ -61,4 +61,4 @@ class Action_Level(Piplines):
                     feas[i*batch_size:(i+1)*batch_size,:-1] = fea.data.cpu().numpy()
                     feas[i*batch_size:(i+1)*batch_size,-1] = labels.cpu().numpy()[:10]
                     i = i+1
-            print 'Done, the action features are saved at ' + filename + '\n'
+            print ('Done, the action features are saved at ' + filename + '\n')
